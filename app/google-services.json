@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "535280175738",
+    "firebase_url": "https://fcmjava-bcc53.firebaseio.com",
+    "project_id": "fcmjava-bcc53",
+    "storage_bucket": "fcmjava-bcc53.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:535280175738:android:19d644975dbdb4aa0dc9c3",
+        "android_client_info": {
+          "package_name": "com.example.fcmjava"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "535280175738-tiansmv14hnetp172qpgq80h2vh459la.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fcmjava",
+            "certificate_hash": "2c53db113beb734aefec909a04970604a16ec2a8"
+          }
+        },
+        {
+          "client_id": "535280175738-sjj6j5p17j5kh11t50htm1fvqkv0q953.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB76cM_5tlI_WNAljAc8em_oPNXLwhMr8s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "535280175738-sjj6j5p17j5kh11t50htm1fvqkv0q953.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
