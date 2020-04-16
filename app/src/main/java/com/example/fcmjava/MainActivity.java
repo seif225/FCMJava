@@ -9,8 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+
 import com.android.volley.AuthFailureError;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -20,6 +20,12 @@ import org.json.JSONException;
 import org.json.JSONObject;;
 import java.util.HashMap;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -50,63 +56,45 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                String message = et.getText().toString();
+
                 String token = "eoU1Tgc06Lg:APA91bFUvoKOfK4I-3sKzG6CUezqXP0JiGe2_m1R6jRD63AotBF3_mw_M7jYoCI9CkK82Rz2A9htusZ-VqIAXpEDGlY_V8HhIcWYSnohfcEu_exXZOUAT32c_5CHOvRR83RiI0wMvVuN";
-                TOPIC = "/topics/userABC";
-                NOTIFICATION_TITLE = et.getText().toString();
-                NOTIFICATION_MESSAGE = "wooohhooo it worked :D ";
 
-                JSONObject notification = new JSONObject();
-                JSONObject notifcationBody = new JSONObject();
-                try {
-                    notifcationBody.put("title", NOTIFICATION_TITLE);
-                    notifcationBody.put("message", NOTIFICATION_MESSAGE);
+                PostModel postModel = new PostModel();
+                Data data = new Data();
+                data.setMessage("dummy Message");
+                data.setTitle(message);
+                postModel.setData(data);
+                postModel.setTo(token);
 
-                    notification.put("to", token);
-                    notification.put("data", notifcationBody);
-                } catch (JSONException e) {
-                    Log.e(TAG, "onCreate: " + e.getMessage());
-                }
-                sendNotification(notification);
+                Retrofit retro = new Retrofit.Builder()
+                        .baseUrl("https://fcm.googleapis.com/fcm/")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+
+                Api api = retro.create(Api.class);
+
+                Call<PostModel> call = api.sendNotification(postModel);
+                call.enqueue(new Callback<PostModel>() {
+                    @Override
+                    public void onResponse(Call<PostModel> call, Response<PostModel> response) {
+
+                        Log.e(TAG, "onResponse: " + response.body());
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostModel> call, Throwable t) {
+
+                        Log.e(TAG, "onFailure: " + t.getMessage());
+
+                    }
+                });
             }
         });
 
-
     }
-
-    private void sendNotification(JSONObject notification) {
-
-
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(FCM_API, notification,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.e(TAG, "onResponse: " + response.toString());
-                        /*edtTitle.setText("");
-                        edtMessage.setText("");*/
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(MainActivity.this, "Request error", Toast.LENGTH_LONG).show();
-                        Log.i(TAG, "onErrorResponse: Didn't work");
-                    }
-                }){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("Authorization", serverKey);
-                params.put("Content-Type", contentType);
-                return params;
-            }
-        };
-        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
-    }
-
-    }
-
-
+}
 
 
 
