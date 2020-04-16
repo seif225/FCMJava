@@ -57,9 +57,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 String message = et.getText().toString();
-
                 String token = "eoU1Tgc06Lg:APA91bFUvoKOfK4I-3sKzG6CUezqXP0JiGe2_m1R6jRD63AotBF3_mw_M7jYoCI9CkK82Rz2A9htusZ-VqIAXpEDGlY_V8HhIcWYSnohfcEu_exXZOUAT32c_5CHOvRR83RiI0wMvVuN";
-
                 PostModel postModel = new PostModel();
                 Data data = new Data();
                 data.setMessage("dummy Message");
@@ -75,19 +73,15 @@ public class MainActivity extends AppCompatActivity {
                 Api api = retro.create(Api.class);
 
                 Call<PostModel> call = api.sendNotification(postModel);
+
                 call.enqueue(new Callback<PostModel>() {
                     @Override
                     public void onResponse(Call<PostModel> call, Response<PostModel> response) {
-
                         Log.e(TAG, "onResponse: " + response.body());
-
                     }
-
                     @Override
                     public void onFailure(Call<PostModel> call, Throwable t) {
-
                         Log.e(TAG, "onFailure: " + t.getMessage());
-
                     }
                 });
             }
