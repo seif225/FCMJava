@@ -21,10 +21,16 @@ import org.json.JSONObject;;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
@@ -68,22 +74,38 @@ public class MainActivity extends AppCompatActivity {
                 Retrofit retro = new Retrofit.Builder()
                         .baseUrl("https://fcm.googleapis.com/fcm/")
                         .addConverterFactory(GsonConverterFactory.create())
+                        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                         .build();
 
                 Api api = retro.create(Api.class);
 
-                Call<PostModel> call = api.sendNotification(postModel);
+                Observable<PostModel> call = api.sendNotification(postModel).subscribeOn(Schedulers.computation());
 
-                call.enqueue(new Callback<PostModel>() {
+                Observer<PostModel> observer = new Observer<PostModel>() {
                     @Override
-                    public void onResponse(Call<PostModel> call, Response<PostModel> response) {
-                        Log.e(TAG, "onResponse: " + response.body());
+                    public void onSubscribe(Disposable d) {
+
                     }
+
                     @Override
-                    public void onFailure(Call<PostModel> call, Throwable t) {
-                        Log.e(TAG, "onFailure: " + t.getMessage());
+                    public void onNext(PostModel value) {
+                        Log.e(TAG, "onNext: " + value );
                     }
-                });
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + e.getMessage() );
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                };
+
+            call.subscribe(observer);
+
+
             }
         });
 
